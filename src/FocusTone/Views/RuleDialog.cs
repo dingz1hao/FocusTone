@@ -13,7 +13,7 @@ public sealed class RuleDialog : Window
     private readonly TextBox hotkey = new() { Text = "Z" };
     private readonly TextBox from = new() { Width = 145 }, to = new() { Width = 145 };
     private readonly ComboBox behavior = new();
-    private readonly TextBlock state = Ui.Text("加载正在运行的程序…", 12, "#B4A2FF");
+    private readonly TextBlock state = Ui.Text("加载正在运行的程序…", 12, "#60CDFF");
     private readonly Button record;
     private bool recording;
     private List<ProcessItem> processes = [];

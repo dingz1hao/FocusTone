@@ -22,6 +22,19 @@ public static class ProcessMonitor
         try { uint size = 32768; var buffer = new StringBuilder((int)size); return QueryFullProcessImageName(handle, 0, buffer, ref size) ? buffer.ToString() : null; }
         finally { CloseHandle(handle); }
     }
+    public static Task<HashSet<string>> RunningPathsAsync() => Task.Run(() =>
+    {
+        var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var process in Process.GetProcesses())
+        {
+            using (process)
+            {
+                try { var path = PathFor((uint)process.Id); if (path != null) paths.Add(path); }
+                catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException) { }
+            }
+        }
+        return paths;
+    });
     public static Task<List<ProcessItem>> ListAsync() => Task.Run(() =>
     {
         var result = new Dictionary<string, ProcessItem>(StringComparer.OrdinalIgnoreCase);

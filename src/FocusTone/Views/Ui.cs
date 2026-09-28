@@ -12,14 +12,22 @@ public static class Ui
         var button = new Button { Content = label }; if (primary) button.Style = (Style)System.Windows.Application.Current.FindResource("PrimaryButton");
         button.Click += (_, _) => action(); return button;
     }
+    public static Button NavButton(string glyph, string label, Action action)
+    {
+        var icon = new TextBlock { Text = glyph, FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"), FontSize = 17, Foreground = Brush("TextBrush"), Margin = new Thickness(0, 0, 14, 0) };
+        var content = Row(icon, new TextBlock { Text = label, Foreground = Brush("TextBrush"), VerticalAlignment = VerticalAlignment.Center });
+        var button = new Button { Content = content, Style = (Style)System.Windows.Application.Current.FindResource("NavigationButton") };
+        button.Click += (_, _) => action();
+        return button;
+    }
     public static Button AsyncButton(string label, Func<Task> action, Action<string> status, bool primary = false)
     {
         var button = new Button { Content = label }; if (primary) button.Style = (Style)System.Windows.Application.Current.FindResource("PrimaryButton");
         button.Click += async (_, _) => { button.IsEnabled = false; try { await action(); } catch (OperationCanceledException) { status("操作已取消。"); } catch (Exception ex) { Services.Log.Error(label, ex); status(ex.Message); } finally { button.IsEnabled = true; } }; return button;
     }
     public static StackPanel Row(params UIElement[] children) { var row = new StackPanel { Orientation = Orientation.Horizontal }; foreach (var child in children) row.Children.Add(child); return row; }
-    public static Border Card(UIElement child) => new() { Background = Brush("SurfaceBrush"), BorderBrush = Brush("BorderBrush"), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(14), Padding = new Thickness(22), Margin = new Thickness(0, 0, 0, 16), Child = child };
-    public static StackPanel Heading(string title, string subtitle) { var panel = new StackPanel { Margin = new Thickness(0, 0, 0, 20) }; panel.Children.Add(Text(title, 30)); panel.Children.Add(Text(subtitle, 13, "#9BA8C3")); return panel; }
+    public static Border Card(UIElement child) => new() { Background = Brush("SurfaceBrush"), BorderBrush = Brush("BorderBrush"), BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(8), Padding = new Thickness(20), Margin = new Thickness(0, 0, 0, 14), Child = child };
+    public static StackPanel Heading(string title, string subtitle) { var panel = new StackPanel { Margin = new Thickness(0, 0, 0, 20) }; panel.Children.Add(Text(title, 28)); panel.Children.Add(Text(subtitle, 13, "#A8A8A8")); return panel; }
     public static void Animate(UIElement target)
     {
         var animation = new DoubleAnimation(.45, 1, TimeSpan.FromMilliseconds(180));

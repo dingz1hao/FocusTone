@@ -14,15 +14,15 @@ public sealed class WaveformControl : FrameworkElement
     public event Action? RangeChanged;
     public event Action<double>? SeekRequested;
     private int drag;
-    public WaveformControl() { MinHeight = 200; Cursor = Cursors.Hand; Focusable = true; ToolTip = "点击或拖动白色指针跳转；拖动紫色边界调整片段。精确时间可在下方输入。"; }
+    public WaveformControl() { MinHeight = 200; Cursor = Cursors.Hand; Focusable = true; ToolTip = "点击或拖动白色指针跳转；拖动蓝色边界调整片段。精确时间可在下方输入。"; }
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
         var w = ActualWidth; var h = ActualHeight; if (w <= 0 || h <= 0) return;
         double X(double value) => Math.Clamp(value / Math.Max(.001, Duration), 0, 1) * w;
-        dc.DrawRoundedRectangle(new SolidColorBrush(Color.FromRgb(17, 22, 35)), null, new Rect(0, 0, w, h), 12, 12);
-        dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(38, 153, 129, 255)), null, new Rect(X(Start), 8, Math.Max(0, X(End) - X(Start)), h - 38));
-        var muted = new Pen(new SolidColorBrush(Color.FromRgb(63, 77, 104)), 1.4); var active = new Pen(new SolidColorBrush(Color.FromRgb(162, 142, 255)), 1.5);
+        dc.DrawRoundedRectangle(new SolidColorBrush(Color.FromRgb(36, 36, 36)), null, new Rect(0, 0, w, h), 8, 8);
+        dc.DrawRectangle(new SolidColorBrush(Color.FromArgb(38, 96, 205, 255)), null, new Rect(X(Start), 8, Math.Max(0, X(End) - X(Start)), h - 38));
+        var muted = new Pen(new SolidColorBrush(Color.FromRgb(90, 90, 90)), 1.4); var active = new Pen(new SolidColorBrush(Color.FromRgb(96, 205, 255)), 1.5);
         var center = (h - 30) / 2;
         for (int px = 2; px < w - 2; px += 3)
         {
@@ -37,7 +37,7 @@ public sealed class WaveformControl : FrameworkElement
         var play = X(Position); dc.DrawLine(new Pen(Brushes.White, 1.5), new Point(play, 4), new Point(play, h - 30));
         for (int i = 0; i <= 4; i++)
         {
-            var label = new FormattedText(TimeText.Format(Duration * i / 4), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 11, Brushes.SlateGray, VisualTreeHelper.GetDpi(this).PixelsPerDip);
+            var label = new FormattedText(TimeText.Format(Duration * i / 4), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI Variable"), 11, Brushes.LightGray, VisualTreeHelper.GetDpi(this).PixelsPerDip);
             dc.DrawText(label, new Point(Math.Clamp(w * i / 4 - label.Width / 2, 8, Math.Max(8, w - label.Width - 8)), h - 24));
         }
     }

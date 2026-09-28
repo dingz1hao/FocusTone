@@ -10,8 +10,7 @@ public sealed class RuleEngine(Storage storage, AudioEngine audio)
         if (Suspended || !storage.Data.Settings.HotkeysEnabled) return;
         var candidates = storage.Data.Rules.Where(r => r.Enabled && r.Hotkey == hotkey).ToList();
         if (candidates.Count == 0) return;
-        var foreground = ProcessMonitor.ForegroundPath();
-        var rule = RuleMatcher.Find(candidates, hotkey, foreground);
+        var rule = RuleMatcher.Find(candidates, hotkey, ProcessMonitor.ForegroundPath());
         if (rule == null) return;
         var item = storage.Data.Library.FirstOrDefault(x => x.Id == rule.AudioId);
         if (item == null) { Status?.Invoke("规则引用的音频已不存在，请重新选择音频。"); return; }

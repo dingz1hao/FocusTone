@@ -11,7 +11,7 @@ public sealed class BilibiliView : UserControl, IDisposable
     private readonly IBilibiliProvider provider = new BilibiliProvider();
     private readonly WebView2 browser = new();
     private readonly TextBox query = new() { Width = 310, ToolTip = "输入关键词或 BV 号" };
-    private readonly TextBlock state = Ui.Text("官方网页搜索与播放 · 不提取或下载平台音频",12,"#9BA8C3");
+    private readonly TextBlock state = Ui.Text("官方网页搜索与播放 · 不提取或下载平台音频",12,"#A8A8A8");
     private Uri current = new("https://www.bilibili.com/");
     private Task? initialization;
     private bool disposed;
@@ -24,7 +24,7 @@ public sealed class BilibiliView : UserControl, IDisposable
         header.Children.Add(state); DockPanel.SetDock(header,Dock.Top); root.Children.Add(header);
         var bottom = new StackPanel { Margin = new Thickness(0,12,0,0) };
         bottom.Children.Add(Ui.Row(Ui.AsyncButton("导入已有授权音频",ImportLicensed,SetStatus),Ui.Button("返回",()=> { if(browser.CoreWebView2?.CanGoBack==true) browser.CoreWebView2.GoBack(); })));
-        bottom.Children.Add(Ui.Text("标题、UP 主、封面、时长、分 P 和播放由官方页面提供。软件不提取媒体地址、不下载或转换播放流。",12,"#9BA8C3"));
+        bottom.Children.Add(Ui.Text("标题、UP 主、封面、时长、分 P 和播放由官方页面提供。软件不提取媒体地址、不下载或转换播放流。",12,"#A8A8A8"));
         DockPanel.SetDock(bottom,Dock.Bottom); root.Children.Add(bottom); root.Children.Add(browser); Content=root;
         if(!host.Storage.Data.Settings.BilibiliEnabled) { header.IsEnabled=false; browser.Visibility=Visibility.Collapsed; SetStatus("Bilibili 功能已在设置中关闭。"); }
         else Loaded += async (_,_) => { try { await EnsureBrowser(); } catch(Exception ex) { Services.Log.Error("官方网页初始化",ex); SetStatus("内嵌浏览器不可用。请安装 WebView2 Runtime，或在外部浏览器打开。"); } };
